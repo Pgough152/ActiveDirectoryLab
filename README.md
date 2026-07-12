@@ -27,7 +27,108 @@ Create Client VM: <BR>
 <img width="647" height="486" alt="image" src="https://github.com/user-attachments/assets/c1a8b974-1cd9-4185-add4-efb669163991" />
 <BR><BR>
 Set Domain Controller private IP to static.<BR><BR>
-To do this in Azure I went to the DC1 VM into Network and Network Settings and clicked the virtual NIC
-<img width="846" height="528" alt="image" src="https://github.com/user-attachments/assets/f23f0ee6-8cb7-4c64-bbd8-e4799106480f" />
+To do this in Azure I went to the DC1 VM into Network and Network Settings and clicked the virtual NIC<BR><BR>
+<img width="846" height="528" alt="image" src="https://github.com/user-attachments/assets/f23f0ee6-8cb7-4c64-bbd8-e4799106480f" /><BR><BR>
+Then I clicked on "ipconfig1" and selected Static under "Private IP address settings" and save my changes.<BR><BR
+<img width="443" height="132" alt="image" src="https://github.com/user-attachments/assets/1e12f13e-327e-4db8-baae-c4d39da26421" />
+<BR><img width="476" height="197" alt="image" src="https://github.com/user-attachments/assets/1d3fd1fd-fa42-449f-b4ce-383285221663" />
+<BR><BR>
+For the purpose of this lab, I disable the firewall in DC1.<BR><BR>
+I run "wf.msc" <BR>
+<img width="460" height="295" alt="image" src="https://github.com/user-attachments/assets/8c7e6659-502d-494f-800b-cd9729f672e1" /><BR><BR>
+I go to "Windows Defender Firewall Properties"<BR>
+<img width="409" height="149" alt="image" src="https://github.com/user-attachments/assets/473b3bac-4407-4d03-95f1-4ff683047200" /><BR><BR>
+I switch the Firewall state to off in Domain, Private, and Public Profile tabs.<BR><BR>
+<img width="419" height="87" alt="image" src="https://github.com/user-attachments/assets/6e45f6e0-bdc7-4dcd-9d9c-fd817485827b" /><BR><BR>
+Next step is to set Client VM DNS settings to DC1's Private IP Address.<BR><BR>
+<img width="312" height="42" alt="image" src="https://github.com/user-attachments/assets/da6d9e56-f94d-4b80-9323-9479eb60c3ab" /><BR><BR>
+I ran into an issue where the private ip was considered invalid by Azure. I restarted DC1 and it accepted the ip. After the network changes have been saved, I restarted Client VM.<BR><BR>
+<img width="1242" height="492" alt="image" src="https://github.com/user-attachments/assets/12b3b2a3-cf66-424a-b358-079edd51272f" /><BR><BR>
+To verify that Client and DC1, I remote into Client and ping the private ip of DC1.<BR><BR>
+<img width="681" height="278" alt="image" src="https://github.com/user-attachments/assets/21846a4b-3a18-474f-96cc-28bf0813e996" /><BR><BR>
+Next I run ipconfig /all, and see that the DNS Server listed is the private IP of DC1.<BR><BR>
+<img width="993" height="703" alt="image" src="https://github.com/user-attachments/assets/24c84555-07a3-4e46-af2f-a33a8f14f519" /><BR><BR>
+Now I will be installing and setting up Active Directory. I remote into the domain controller, open Server Manager and click on "Add roles and features"<BR><BR>
+<img width="1072" height="158" alt="image" src="https://github.com/user-attachments/assets/d3472542-e2ea-4d78-a4d2-934d351d4813" /><BR><BR>
+I go to Server Roles and check Active Directory Domain Services and select Add Feature and install.<BR><BR>
+<img width="675" height="238" alt="image" src="https://github.com/user-attachments/assets/72a5adfa-b5d5-48a4-8683-a3276bf63418" /><BR>
+<img width="525" height="556" alt="image" src="https://github.com/user-attachments/assets/f0e4cdb4-bfe5-4345-a60c-31eb17d89b12" /><BR>
+<img width="966" height="563" alt="image" src="https://github.com/user-attachments/assets/e1f3cb53-787c-4d91-9d86-d81f8a08c565" /><BR><BR>
+Next I promote DC1 to a domain controller in Server Manager.<BR><BR>
+<img width="430" height="194" alt="image" src="https://github.com/user-attachments/assets/7c360094-33e3-405d-a486-5f5108420e1b" /><BR><BR
+I select Add a new forest in the window that pops up. I enter mydomain.com as the root domain name.<BR><BR>
+<img width="568" height="207" alt="image" src="https://github.com/user-attachments/assets/84bcda67-c344-4962-bb13-ff493473d3cf" /><BR><BR>
+After hitting next I set a Directory Serives Restore Mode password.<BR><BR>
+<img width="574" height="151" alt="image" src="https://github.com/user-attachments/assets/9a6fd7d3-198e-4248-bc10-e2f6d5829cd3" /><BR><BR>
+Next I click install under the Prerequisites Check and restart DC1.<BR><BR>
+<img width="632" height="257" alt="image" src="https://github.com/user-attachments/assets/e3399afc-0b58-45fb-acd3-ba3fbde59fd4" /><BR><BR>
+I log back into DC1 with the username mydomain.com\labuser<BR><BR>
+<img width="505" height="157" alt="image" src="https://github.com/user-attachments/assets/7e55d5d3-7f55-4441-bf2f-f2db08d479a9" /><BR><BR>
+In Active Directory Users and Computers, I am going to be adding a couple OUs. "_EMPLOYEES" "_ADMINS"<br><br>
+<img width="747" height="570" alt="image" src="https://github.com/user-attachments/assets/b55b68f3-8415-432d-90d8-23ea6ed492ff" /><br>
+<img width="290" height="217" alt="image" src="https://github.com/user-attachments/assets/5b890bf3-6b93-4c5d-b720-afe6ae78397f" />
+<br>
+<img width="318" height="227" alt="image" src="https://github.com/user-attachments/assets/cbf263c4-c833-47ac-a36c-1b9d3ccafbdc" /><br><br>
+Next I will add a user Jane Doe in the _ADMINS OU.<BR><BR>
+<img width="490" height="404" alt="image" src="https://github.com/user-attachments/assets/ef6f284f-f801-4e22-9157-cb5ab93f50b0" /><BR>
+<img width="368" height="391" alt="image" src="https://github.com/user-attachments/assets/0126729c-a2a7-45ff-9798-4ea9709a4588" /><BR><BR>
+Next I add Jane Doe to the Domain Admins security group. I right click Jane Doe and go to Properties. I go to the Member Of tab, click Add, and type Domain Admins.<BR>
+<img width="516" height="481" alt="image" src="https://github.com/user-attachments/assets/0781c264-17e4-4ab1-afd7-8960305f0b49" /><BR><BR>
+System > About > Domain or workgroup > Change <BR><BR>
+<img width="662" height="733" alt="image" src="https://github.com/user-attachments/assets/7d472562-ffdc-4bec-80ee-316f7dbd5c0e" /><BR><BR>
+Set the Domain as mydomain.com
+<img width="382" height="90" alt="image" src="https://github.com/user-attachments/assets/fe75bd6f-4889-4a72-b04c-86fa9d1c7df3" /><BR><BR>
+Admin login. I used jane_admin to confirm the domain changes and restart Client VM<BR><BR>
+<img width="363" height="183" alt="image" src="https://github.com/user-attachments/assets/ab6414ea-980a-470a-961f-8236c49d05d0" /><BR><BR
+From within DC1 I add a new OU "_CLIENTS" and add Client vm to it by dragging Client from Computers into _CLIENTS and confirm the move.<BR><BR>
+<img width="796" height="348" alt="image" src="https://github.com/user-attachments/assets/f65fe373-4ed4-4f89-867a-737b680ac944" /><BR><BR>
+I, then, log into the Client VM as Jane using mydomain.com\jane_admin and enable non-administrative users by going to System > About > Remote Desktop > Remote Desktop users > Add and type "domain users" and click Check Names and click Okay.<BR><BR>
+<img width="448" height="332" alt="image" src="https://github.com/user-attachments/assets/20f16f0d-6fc2-47b2-8ea3-9623d6b2d927" /><BR>
+<img width="292" height="271" alt="image" src="https://github.com/user-attachments/assets/a03e2ce6-3cd6-43bc-b8a7-6bb5f9ec4d5e" /><BR>
+<img width="586" height="253" alt="image" src="https://github.com/user-attachments/assets/13e286d2-9f8e-4958-858b-3de94ef2ced7" /><BR>
+<img width="208" height="115" alt="image" src="https://github.com/user-attachments/assets/70994fce-235a-4c79-a51f-1e0a9827f23b" /><BR><BR>
+Withing DC1, I use a [script](https://github.com/joshmadakor1/AD_PS/blob/master/Generate-Names-Create-Users.ps1) created and provided by [Josh Madakor](https://github.com/joshmadakor1) to generate users for the directory using powershell.<BR><BR>
+<img width="998" height="1068" alt="image" src="https://github.com/user-attachments/assets/de847ad4-a493-4f71-8ef8-5c7726577d60" />
+<BR><img width="296" height="340" alt="image" src="https://github.com/user-attachments/assets/b50be491-dff7-4edf-aa29-cae79a985731" />
+<BR>
+<img width="575" height="363" alt="image" src="https://github.com/user-attachments/assets/0ee1e489-7ce5-4434-a90a-d4c9514662ff" /><BR><BR>
+Now I will attempt to log in with one of the users generated.<BR><BR>
+<img width="805" height="322" alt="image" src="https://github.com/user-attachments/assets/2c7f4bc7-4a81-4131-8ecd-b12af044cf7f" /><BR>
+<img width="247" height="487" alt="image" src="https://github.com/user-attachments/assets/341aa31d-0397-4e70-8849-c6d69f4b8aed" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
