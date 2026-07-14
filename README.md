@@ -4,7 +4,7 @@
 
 
 <h2>Description</h2>
-Project consists using Azure to gain familiarity with the cloud service. I started by creating a Resource Group. After that a Storage Account was added to it. Once that is done, I created a simple text file and uploaded it to the Storage Account. From Azure, I edited the text file and saved it locally under a new file name. Afterwards I delete the entire Resource group from Azure and check on Cost Analysis.
+Project consists creating a domain controller and a client VM, setting the DC as the DNS server for the client. After that I install and set up Active Directory onto the server. I then populate the server with users, edit a group policy, and simulate different actions that can be done with AD such as unlocking accounts and reseting password, as well as checking logs for failed logins.
 <br />
 
 
@@ -12,6 +12,7 @@ Project consists using Azure to gain familiarity with the cloud service. I start
 
 - <b>Microsoft Azure</b> 
 - <b>Remote Desktop Connection</b>
+- <b>Active Directory</b>
 
 <h2>Lab walk-through:</h2>
 
@@ -94,7 +95,40 @@ Withing DC1, I use a [script](https://github.com/joshmadakor1/AD_PS/blob/master/
 <img width="575" height="363" alt="image" src="https://github.com/user-attachments/assets/0ee1e489-7ce5-4434-a90a-d4c9514662ff" /><BR><BR>
 Now I will attempt to log in with one of the users generated.<BR><BR>
 <img width="805" height="322" alt="image" src="https://github.com/user-attachments/assets/2c7f4bc7-4a81-4131-8ecd-b12af044cf7f" /><BR>
-<img width="247" height="487" alt="image" src="https://github.com/user-attachments/assets/341aa31d-0397-4e70-8849-c6d69f4b8aed" />
+<img width="247" height="487" alt="image" src="https://github.com/user-attachments/assets/341aa31d-0397-4e70-8849-c6d69f4b8aed" /><BR><BR>
+Set up a Group Policy Lockout rule<BR><BR>
+<img width="446" height="178" alt="image" src="https://github.com/user-attachments/assets/ef97f0a9-ef86-4235-afcf-f0f7696ac72e" /><BR><BR>
+From Group Policy Management go to Default Domain Policy, right click and select Edit.<BR><BR
+<img width="515" height="303" alt="image" src="https://github.com/user-attachments/assets/fb08eb39-1f04-4223-83ae-bac7477d0f65" /><BR><Br>
+This will take you to Group Policy Management Editor. From there go Computer Configuration > Policies > Windows Settings > Security Settings > Account Lockout Policies. Right click Account lockout threshold and select Propeties. From there I changed the lockout policy to 10 failed attempts.<BR><BR>
+<img width="922" height="398" alt="image" src="https://github.com/user-attachments/assets/4d86b521-187f-4769-a1da-a0e0c0426644" /><BR><BR>
+I then log into Client and jane_admin and force a gp update<BR><BR>
+<img width="503" height="256" alt="image" src="https://github.com/user-attachments/assets/9921e96d-140e-462c-b90f-4e0c90512596" /><BR><BR>
+
+Testing the Account Lockout rule by failing 10 logins with a user from the list randomly generated names.<BR><BR>
+<img width="472" height="157" alt="image" src="https://github.com/user-attachments/assets/f9fcf836-90c0-4b74-a7ff-a6d1ba62c28e" />
+<BR>
+<img width="677" height="188" alt="image" src="https://github.com/user-attachments/assets/343d7259-0337-49f4-9dc2-980b1ef0f86e" /><BR><BR>
+Now that the account is locked out, I will use Active Directory to unlock the account and log into Client with the user account.<BR><BR>
+<img width="487" height="345" alt="image" src="https://github.com/user-attachments/assets/1df45a44-525a-4e5b-b358-3fd3d6c9bb25" /><BR>
+<img width="370" height="463" alt="image" src="https://github.com/user-attachments/assets/5077e122-6138-4cf2-b4c0-50b73fc6c70e" /><BR>
+I also reset the password for the user by finding his name in ADUC, right click his name and click Reset Password. I then enter a new password for him.<BR><BR>
+<img width="471" height="320" alt="image" src="https://github.com/user-attachments/assets/6012731d-6f98-4ec5-ad9d-0c86e3bbee9d" /><BR><BR>
+Enabling/disabling an account.<BR><BR>
+<img width="351" height="114" alt="image" src="https://github.com/user-attachments/assets/333f31f5-23e7-491d-abc4-60af346253e7" /><BR>
+<img width="333" height="118" alt="image" src="https://github.com/user-attachments/assets/ae5dcd9d-2e25-45aa-933e-fa830ebb0f55" /><BR>
+Next I view the logs from the user's failed logins.<BR><BR>
+In my domain controller I open Event Viewer and go Windows Logs > Security. I right click Security and select Find. I search for the user.<BR><BR>
+<img width="250" height="225" alt="image" src="https://github.com/user-attachments/assets/58317e55-c080-4c7e-ab30-e543eae8c0da" /><BR>
+<img width="789" height="371" alt="image" src="https://github.com/user-attachments/assets/746784f4-2829-46b8-9db0-f68a784ace37" /><BR><BR>
+Here is the log of the user failing their login.<BR><BR>
+<img width="767" height="610" alt="image" src="https://github.com/user-attachments/assets/20eef9c6-a0f2-4836-81f4-0aea6ceec1e7" />
+
+
+
+
+
+
 
 
 
